@@ -1,0 +1,672 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MuscleMethod | AI Decision Demo</title>
+
+    <style>
+        :root {
+            font-family: Arial, sans-serif;
+            color: #1d2638;
+            background: #f3f5fa;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+        }
+
+        .wrap {
+            max-width: 1100px;
+            margin: 36px auto;
+            padding: 0 18px;
+        }
+
+        h1 {
+            font-size: 31px;
+            margin-bottom: 8px;
+        }
+
+        h1 span {
+            color: #6255b5;
+        }
+
+        .sub {
+            color: #58657a;
+            line-height: 1.6;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .card {
+            background: white;
+            border: 1px solid #e0e5ed;
+            border-radius: 17px;
+            padding: 25px;
+            box-shadow: 0 5px 20px #202e4809;
+        }
+
+        h2 {
+            font-size: 20px;
+            margin-top: 0;
+        }
+
+        .control {
+            margin: 18px 0;
+        }
+
+        .labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            accent-color: #6255b5;
+        }
+
+        button {
+            font: inherit;
+            border-radius: 8px;
+            padding: 11px;
+            background: #6255b5;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            width: 100%;
+            margin-top: 12px;
+        }
+
+        button:hover {
+            opacity: 0.88;
+        }
+
+        .scenarios {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+        }
+
+        .scenario {
+            background: #efedfc;
+            color: #433c80;
+            font-size: 13px;
+            margin: 0;
+            padding: 10px;
+        }
+
+        .checks {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 15px;
+            font-size: 14px;
+        }
+
+        .pill {
+            padding: 13px;
+            border-radius: 11px;
+            background: #f1eefc;
+            color: #4c388d;
+            font-weight: bold;
+        }
+
+        .danger {
+            background: #fff0ef;
+            color: #ad2822;
+        }
+
+        .ok {
+            background: #eaf7ef;
+            color: #216d41;
+        }
+
+        .metric {
+            border-top: 1px solid #e5e6ee;
+            margin-top: 15px;
+            padding-top: 15px;
+            line-height: 1.6;
+        }
+
+        small {
+            color: #68738c;
+            line-height: 1.5;
+            display: block;
+        }
+
+        .notice {
+            margin-top: 20px;
+            padding: 13px;
+            background: #fff9e8;
+            border: 1px solid #e9daac;
+            border-radius: 10px;
+            color: #786128;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 760px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <main class="wrap">
+
+        <h1>
+            MuscleMethod
+            <span>AI Decision Demo</span>
+        </h1>
+
+        <div class="sub">
+            Simulated EEG, EMG, and movement inputs
+            → AI classification
+            → compensation-related review
+            → independent safety checks.
+
+            <p>
+                Educational simulation only.
+                Not medical advice, not a compensation diagnosis,
+                and not connected to a physical robotic glove.
+            </p>
+        </div>
+
+        <div class="grid">
+
+            <!-- LEFT SIDE: INPUTS -->
+
+            <section class="card">
+
+                <h2>Choose a Simulation</h2>
+
+                <div class="scenarios" id="scenarios"></div>
+
+                <div id="sliders"></div>
+
+                <div class="control">
+
+                    <div class="labels">
+                        <label for="quality">
+                            Signal Quality
+                        </label>
+
+                        <strong id="qualityValue">
+                            0.92
+                        </strong>
+                    </div>
+
+                    <input
+                        id="quality"
+                        type="range"
+                        min="0"
+                        max="1"
+                        step="0.01"
+                        value="0.92"
+                    >
+
+                </div>
+
+                <h2>Safety Conditions</h2>
+
+                <div class="checks">
+
+                    <label>
+                        <input
+                            id="connected"
+                            type="checkbox"
+                            checked
+                        >
+                        Sensors connected
+                    </label>
+
+                    <label>
+                        <input
+                            id="force"
+                            type="checkbox"
+                            checked
+                        >
+                        Force within limit
+                    </label>
+
+                    <label>
+                        <input
+                            id="movement"
+                            type="checkbox"
+                            checked
+                        >
+                        Movement within limit
+                    </label>
+
+                    <label>
+                        <input
+                            id="stop"
+                            type="checkbox"
+                        >
+                        Emergency stop
+                    </label>
+
+                </div>
+
+                <button id="run">
+                    Analyze Simulated Movement
+                </button>
+
+            </section>
+
+
+            <!-- RIGHT SIDE: AI RESULTS -->
+
+            <section class="card">
+
+                <h2>AI Result</h2>
+
+                <div id="decision" class="pill">
+                    Select a scenario and analyze
+                </div>
+
+                <div class="metric">
+                    <strong>Proposed Model Prediction</strong>
+                    <div id="prediction">—</div>
+                </div>
+
+                <div class="metric">
+                    <strong>Model Vote Agreement</strong>
+                    <div id="confidence">—</div>
+
+                    <small>
+                        Agreement among weighted KNN neighbors.
+                        Not a calibrated clinical probability.
+                    </small>
+                </div>
+
+                <div class="metric">
+                    <strong>Intent–Execution Mismatch Index</strong>
+                    <div id="gap">—</div>
+
+                    <small>
+                        Estimates disagreement between attempted
+                        movement and simulated muscle/movement response.
+                    </small>
+                </div>
+
+                <div class="metric">
+                    <strong>
+                        Possible Upper-Body Substitution
+                    </strong>
+
+                    <div id="substitution">—</div>
+
+                    <small>
+                        Examines simulated trunk leaning and
+                        shoulder hiking. This does not confirm
+                        clinical compensation.
+                    </small>
+                </div>
+
+                <div class="metric">
+                    <strong>Movement Pattern Explanation</strong>
+                    <div id="explanation">—</div>
+                </div>
+
+                <div class="metric">
+                    <strong>Safety Gate</strong>
+                    <div id="safety">—</div>
+                </div>
+
+                <div class="metric">
+                    <strong>Reasons / Warnings</strong>
+                    <div id="reasons">—</div>
+                </div>
+
+                <div class="notice">
+                    All sensor measurements are simulated.
+                    No real patient, wearable sensor,
+                    robotic actuator, or medical device
+                    is connected to this software.
+                </div>
+
+            </section>
+
+        </div>
+
+    </main>
+
+
+    <script>
+
+        // Features used by the AI demonstration
+
+        const specs = [
+            ["eeg_intent", "EEG Movement-Intent Estimate"],
+            ["emg_target", "EMG Target-Muscle Activity"],
+            ["coactivation", "EMG Co-Activation Indicator"],
+            ["fatigue", "Fatigue Indicator"],
+            ["imu_motion", "IMU Hand/Wrist Movement"],
+            ["imu_smoothness", "Movement Smoothness"],
+            ["trunk_lean", "Simulated Trunk Leaning"],
+            ["shoulder_hike", "Simulated Shoulder Hiking"]
+        ];
+
+
+        // Simulated rehabilitation examples
+
+        const examples = {
+
+            "Assist More": [
+                0.83, 0.27, 0.22, 0.25,
+                0.28, 0.47, 0.10, 0.10
+            ],
+
+            "Assist Less": [
+                0.85, 0.79, 0.18, 0.18,
+                0.80, 0.82, 0.10, 0.10
+            ],
+
+            "Rest": [
+                0.61, 0.32, 0.34, 0.88,
+                0.35, 0.39, 0.10, 0.10
+            ],
+
+            "Pattern Review": [
+                0.83, 0.72, 0.83, 0.24,
+                0.45, 0.28, 0.10, 0.10
+            ],
+
+            "No Action": [
+                0.14, 0.15, 0.16, 0.14,
+                0.12, 0.50, 0.10, 0.10
+            ],
+
+            "Conflicting Signals": [
+                0.88, 0.20, 0.80, 0.15,
+                0.18, 0.18, 0.10, 0.10
+            ],
+
+            "Upper-Body Substitution": [
+                0.85, 0.75, 0.18, 0.18,
+                0.80, 0.80, 0.88, 0.80
+            ]
+        };
+
+
+        // Create input sliders automatically
+
+        const sliderArea = document.getElementById("sliders");
+
+        for (const [key, title] of specs) {
+
+            const section = document.createElement("div");
+
+            section.className = "control";
+
+            section.innerHTML = `
+                <div class="labels">
+                    <label for="${key}">${title}</label>
+                    <strong id="${key}_value">0.50</strong>
+                </div>
+
+                <input
+                    id="${key}"
+                    type="range"
+                    min="0"
+                    max="1"
+                    step="0.01"
+                    value="0.50"
+                >
+            `;
+
+            sliderArea.appendChild(section);
+
+            const slider = document.getElementById(key);
+
+            slider.addEventListener("input", function () {
+                document.getElementById(
+                    key + "_value"
+                ).textContent = Number(slider.value).toFixed(2);
+            });
+        }
+
+
+        // Load selected scenario
+
+        function loadScenario(name) {
+
+            const values = examples[name];
+
+            specs.forEach(function (item, index) {
+
+                const key = item[0];
+                const value = values[index];
+
+                document.getElementById(key).value = value;
+
+                document.getElementById(
+                    key + "_value"
+                ).textContent = value.toFixed(2);
+            });
+
+            // Reset previous safety settings
+
+            document.getElementById("quality").value = 0.92;
+            document.getElementById("qualityValue").textContent = "0.92";
+
+            document.getElementById("connected").checked = true;
+            document.getElementById("force").checked = true;
+            document.getElementById("movement").checked = true;
+            document.getElementById("stop").checked = false;
+
+            document.getElementById("decision").textContent =
+                "Click Analyze Simulated Movement";
+        }
+
+
+        // Create scenario buttons
+
+        for (const name of Object.keys(examples)) {
+
+            const button = document.createElement("button");
+
+            button.className = "scenario";
+            button.textContent = name;
+
+            button.addEventListener("click", function () {
+                loadScenario(name);
+            });
+
+            document.getElementById("scenarios")
+                .appendChild(button);
+        }
+
+
+        // Display live signal quality
+
+        document.getElementById("quality")
+            .addEventListener("input", function () {
+
+                document.getElementById(
+                    "qualityValue"
+                ).textContent = Number(this.value).toFixed(2);
+            });
+
+
+        // Send inputs to Python AI
+
+        document.getElementById("run")
+            .addEventListener("click", async function () {
+
+                const signals = {};
+
+                for (const [key] of specs) {
+
+                    signals[key] = Number(
+                        document.getElementById(key).value
+                    );
+                }
+
+                const payload = {
+
+                    signals: signals,
+
+                    signal_quality: Number(
+                        document.getElementById("quality").value
+                    ),
+
+                    sensors_connected:
+                        document.getElementById("connected").checked,
+
+                    force_within_limit:
+                        document.getElementById("force").checked,
+
+                    movement_within_limit:
+                        document.getElementById("movement").checked,
+
+                    emergency_stop:
+                        document.getElementById("stop").checked
+                };
+
+
+                try {
+
+                    const response = await fetch("/predict", {
+
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+
+                        body: JSON.stringify(payload)
+                    });
+
+                    const result = await response.json();
+
+                    if (!response.ok) {
+                        throw new Error(
+                            result.error || "Prediction failed"
+                        );
+                    }
+
+
+                    // Final decision
+
+                    const decisionBox =
+                        document.getElementById("decision");
+
+                    decisionBox.textContent = result.decision;
+
+                    decisionBox.className =
+                        "pill " +
+                        (
+                            result.safety_state === "BLOCKED"
+                            ? "danger"
+                            : "ok"
+                        );
+
+
+                    // Model prediction
+
+                    document.getElementById(
+                        "prediction"
+                    ).textContent = result.model_prediction;
+
+
+                    // Vote agreement
+
+                    document.getElementById(
+                        "confidence"
+                    ).textContent =
+                        Math.round(result.vote_confidence * 100) + "%";
+
+
+                    // Intent-execution mismatch
+
+                    document.getElementById(
+                        "gap"
+                    ).textContent =
+                        Number(result.intent_execution_gap).toFixed(3);
+
+
+                    // Upper-body substitution
+
+                    if (result.upper_body_substitution_flag) {
+
+                        document.getElementById(
+                            "substitution"
+                        ).textContent =
+                            "Review suggested: " +
+                            result.upper_body_evidence
+                                .patterns_above_demo_threshold
+                                .join(", ");
+
+                    } else {
+
+                        document.getElementById(
+                            "substitution"
+                        ).textContent =
+                            "No simulated upper-body substitution flag";
+                    }
+
+
+                    // Explanation
+
+                    document.getElementById(
+                        "explanation"
+                    ).textContent =
+                        result.movement_explanation;
+
+
+                    // Safety gate
+
+                    document.getElementById(
+                        "safety"
+                    ).textContent =
+                        result.safety_state +
+                        " — " +
+                        result.assistance_status;
+
+
+                    // Warnings
+
+                    document.getElementById(
+                        "reasons"
+                    ).textContent =
+                        result.safety_reasons.length > 0
+                        ? result.safety_reasons.join("; ")
+                        : "No simulated safety restriction triggered.";
+
+                } catch (error) {
+
+                    document.getElementById(
+                        "decision"
+                    ).textContent =
+                        "Error: " + error.message;
+                }
+            });
+
+
+        // Start with Assist More scenario
+
+        loadScenario("Assist More");
+
+    </script>
+
+</body>
+</html>

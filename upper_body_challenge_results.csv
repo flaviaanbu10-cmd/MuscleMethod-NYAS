@@ -1,0 +1,9 @@
+scenario,expected_flag,actual_flag,match,final_decision,model_prediction,increase_allowed,warnings
+"Smooth movement, little trunk/shoulder substitution",0,0,1,Assist Less,Assist Less,0,
+Same movement with high trunk lean,1,1,1,Pattern Review Recommended,Assist Less,0,Possible upper-body movement substitution (trunk leaning); therapist review suggested
+Same movement with high shoulder hike,1,1,1,Pattern Review Recommended,Assist Less,0,Possible upper-body movement substitution (shoulder hiking); therapist review suggested
+Same movement with both substitutions,1,1,1,Pattern Review Recommended,Assist Less,0,"Possible upper-body movement substitution (trunk leaning, shoulder hiking); therapist review suggested"
+"Weak muscles, no upper-body substitution",0,0,1,Assist More,Assist More,1,
+High coactivation alone,0,0,1,Unclear — Review Signals,Pattern Review Recommended,0,Uncertain model prediction
+High trunk lean without attempted movement,0,0,1,Assist Less,Assist Less,0,
+High trunk lean without meaningful hand movement,0,0,1,Assist More,Assist More,1,
